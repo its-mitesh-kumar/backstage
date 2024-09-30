@@ -76,7 +76,7 @@ export function genPageTheme(props: {
   const gradientColors = colors.length === 1 ? [colors[0], colors[0]] : colors;
   const gradient = `linear-gradient(90deg, ${gradientColors.join(', ')})`;
   const backgroundImage = `${shape},  ${gradient}`;
-  const fontColor = options?.fontColor ?? '#FFFFFF';
+  const fontColor = '#FFFFFF';
 
   return {
     colors: colors,

@@ -24,24 +24,29 @@ import { Link } from '../../components/Link';
 export type HeaderLabelClassKey = 'root' | 'label' | 'value';
 
 const useStyles = makeStyles(
-  theme => ({
-    root: {
-      textAlign: 'left',
-    },
-    label: {
-      color: theme.page.fontColor,
-      fontWeight: theme.typography.fontWeightBold,
-      letterSpacing: 0,
-      fontSize: theme.typography.fontSize,
-      marginBottom: theme.spacing(1) / 2,
-      lineHeight: 1,
-    },
-    value: {
-      color: alpha(theme.page.fontColor, 0.8),
-      fontSize: theme.typography.fontSize,
-      lineHeight: 1,
-    },
-  }),
+  theme => {
+    const fontColor = Array.isArray(theme.page.fontColor)
+      ? theme.page.fontColor[0]
+      : theme.page.fontColor;
+    return {
+      root: {
+        textAlign: 'left',
+      },
+      label: {
+        color: fontColor,
+        fontWeight: theme.typography.fontWeightBold,
+        letterSpacing: 0,
+        fontSize: theme.typography.fontSize,
+        marginBottom: theme.spacing(1) / 2,
+        lineHeight: 1,
+      },
+      value: {
+        color: alpha(fontColor, 0.8),
+        fontSize: theme.typography.fontSize,
+        lineHeight: 1,
+      },
+    };
+  },
   { name: 'BackstageHeaderLabel' },
 );
 
@@ -87,7 +92,7 @@ export function HeaderLabel(props: HeaderLabelProps) {
   const content = (
     <HeaderLabelContent
       className={classes.value}
-      value={value || '<Unknown>'}
+      value="ABCDe"
       typographyRootComponent={contentTypograpyRootComponent}
     />
   );
