@@ -20,9 +20,11 @@ import {
   ApiFactory,
   ApiRef,
   ConfigApi,
+  IdentityApi,
   analyticsApiRef,
   configApiRef,
   createApiFactory,
+  identityApiRef,
 } from '@backstage/core-plugin-api';
 import { JsonObject } from '@backstage/types';
 import { ApiMock } from './ApiMock';
@@ -127,7 +129,7 @@ export namespace mockApis {
   }
   export namespace analytics {
     export const factory = simpleFactory(analyticsApiRef, analytics);
-    export const mock = analyticsMockSkeleton;
+    export const mock = simpleMock(analyticsApiRef, analyticsMockSkeleton);
   }
 
   const configMockSkeleton = (): jest.Mocked<ConfigApi> => ({
@@ -198,5 +200,49 @@ export namespace mockApis {
      * @public
      */
     export const mock = simpleMock(configApiRef, configMockSkeleton);
+  }
+
+  const identityMockSkeleton = (): jest.Mocked<IdentityApi> => ({
+    getBackstageIdentity: jest.fn(),
+    getCredentials: jest.fn(),
+    getProfileInfo: jest.fn(),
+    signOut: jest.fn(),
+  });
+  export function identity(options?: {
+    userEntityRef?: string;
+    ownershipEntityRefs?: string[];
+    token?: string;
+    email?: string;
+    displayName?: string;
+    picture?: string;
+  }) {
+    const {
+      userEntityRef = 'user:default/test',
+      ownershipEntityRefs = ['user:default/test'],
+      token,
+      email,
+      displayName,
+      picture,
+    } = options ?? {};
+    return simpleInstance(
+      identityApiRef,
+      {
+        async getBackstageIdentity() {
+          return { type: 'user', ownershipEntityRefs, userEntityRef };
+        },
+        async getCredentials() {
+          return { token };
+        },
+        async getProfileInfo() {
+          return { email, displayName, picture };
+        },
+        async signOut() {},
+      },
+      identityMockSkeleton,
+    );
+  }
+  export namespace identity {
+    export const factory = simpleFactory(identityApiRef, identity);
+    export const mock = simpleMock(identityApiRef, identityMockSkeleton);
   }
 }

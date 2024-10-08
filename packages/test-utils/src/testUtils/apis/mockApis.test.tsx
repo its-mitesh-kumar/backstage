@@ -22,9 +22,10 @@ describe('mockApis', () => {
 
     it('can create an instance and make assertions on it', () => {
       const empty = mockApis.config();
-      const notEmpty = mockApis.config({ data });
       expect(empty.getOptional('backend.baseUrl')).toBeUndefined();
       expect(empty.getOptional).toHaveBeenCalledTimes(1);
+
+      const notEmpty = mockApis.config({ data });
       expect(notEmpty.getOptional('backend.baseUrl')).toEqual(
         'http://test.com',
       );
@@ -35,6 +36,92 @@ describe('mockApis', () => {
       const mock = mockApis.config.mock({ getString: () => 'replaced' });
       expect(mock.getString('a')).toEqual('replaced');
       expect(mock.getString).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('identity', () => {
+    it('can create an instance and make assertions on it', async () => {
+      const empty = mockApis.identity();
+      await expect(empty.getBackstageIdentity()).resolves.toEqual({
+        type: 'user',
+        userEntityRef: 'user:default/test',
+        ownershipEntityRefs: ['user:default/test'],
+      });
+      await expect(empty.getCredentials()).resolves.toEqual({});
+      await expect(empty.getProfileInfo()).resolves.toEqual({});
+      await expect(empty.signOut()).resolves.toBeUndefined();
+      expect(empty.getBackstageIdentity).toHaveBeenCalledTimes(1);
+      expect(empty.getCredentials).toHaveBeenCalledTimes(1);
+      expect(empty.getProfileInfo).toHaveBeenCalledTimes(1);
+      expect(empty.signOut).toHaveBeenCalledTimes(1);
+
+      const notEmpty = mockApis.identity({
+        userEntityRef: 'a',
+        ownershipEntityRefs: ['b'],
+        token: 'c',
+        email: 'd',
+        displayName: 'e',
+        picture: 'f',
+      });
+      await expect(notEmpty.getBackstageIdentity()).resolves.toEqual({
+        type: 'user',
+        userEntityRef: 'a',
+        ownershipEntityRefs: ['b'],
+      });
+      await expect(notEmpty.getCredentials()).resolves.toEqual({ token: 'c' });
+      await expect(notEmpty.getProfileInfo()).resolves.toEqual({
+        email: 'd',
+        displayName: 'e',
+        picture: 'f',
+      });
+      await expect(notEmpty.signOut()).resolves.toBeUndefined();
+      expect(notEmpty.getBackstageIdentity).toHaveBeenCalledTimes(1);
+      expect(notEmpty.getCredentials).toHaveBeenCalledTimes(1);
+      expect(notEmpty.getProfileInfo).toHaveBeenCalledTimes(1);
+      expect(notEmpty.signOut).toHaveBeenCalledTimes(1);
+    });
+
+    it('can create a mock and make assertions on it', async () => {
+      const empty = mockApis.identity.mock();
+      expect(empty.getBackstageIdentity()).toBeUndefined();
+      expect(empty.getCredentials()).toBeUndefined();
+      expect(empty.getProfileInfo()).toBeUndefined();
+      expect(empty.signOut()).toBeUndefined();
+      expect(empty.getBackstageIdentity).toHaveBeenCalledTimes(1);
+      expect(empty.getCredentials).toHaveBeenCalledTimes(1);
+      expect(empty.getProfileInfo).toHaveBeenCalledTimes(1);
+      expect(empty.signOut).toHaveBeenCalledTimes(1);
+
+      const notEmpty = mockApis.identity.mock({
+        getBackstageIdentity: async () => ({
+          type: 'user',
+          userEntityRef: 'a',
+          ownershipEntityRefs: ['b'],
+        }),
+        getCredentials: async () => ({ token: 'c' }),
+        getProfileInfo: async () => ({
+          email: 'd',
+          displayName: 'e',
+          picture: 'f',
+        }),
+        signOut: async () => undefined,
+      });
+      await expect(notEmpty.getBackstageIdentity()).resolves.toEqual({
+        type: 'user',
+        userEntityRef: 'a',
+        ownershipEntityRefs: ['b'],
+      });
+      await expect(notEmpty.getCredentials()).resolves.toEqual({ token: 'c' });
+      await expect(notEmpty.getProfileInfo()).resolves.toEqual({
+        email: 'd',
+        displayName: 'e',
+        picture: 'f',
+      });
+      await expect(notEmpty.signOut()).resolves.toBeUndefined();
+      expect(notEmpty.getBackstageIdentity).toHaveBeenCalledTimes(1);
+      expect(notEmpty.getCredentials).toHaveBeenCalledTimes(1);
+      expect(notEmpty.getProfileInfo).toHaveBeenCalledTimes(1);
+      expect(notEmpty.signOut).toHaveBeenCalledTimes(1);
     });
   });
 });
