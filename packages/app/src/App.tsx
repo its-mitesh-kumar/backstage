@@ -74,6 +74,7 @@ import {
 import { CustomizableHomePage } from './components/home/CustomizableHomePage';
 import { HomePage } from './components/home/HomePage';
 import { BuiThemerPage } from '@backstage/plugin-mui-to-bui';
+import { scaffolderTranslations } from './translations/scaffolder';
 
 const app = createApp({
   apis,
@@ -88,6 +89,11 @@ const app = createApp({
       pluginId: '',
     },
   ],
+  __experimentalTranslations: {
+    availableLanguages: ['en'],
+    resources: [scaffolderTranslations],
+  },
+
   components: {
     SignInPage: props => {
       return (
