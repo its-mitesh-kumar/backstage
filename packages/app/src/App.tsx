@@ -74,6 +74,7 @@ import {
 import { CustomizableHomePage } from './components/home/CustomizableHomePage';
 import { HomePage } from './components/home/HomePage';
 import { BuiThemerPage } from '@backstage/plugin-mui-to-bui';
+import { appTitleTranslations } from './translations';
 
 const app = createApp({
   apis,
@@ -99,6 +100,13 @@ const app = createApp({
         />
       );
     },
+  },
+  // Internationalization configuration
+  __experimentalTranslations: {
+    availableLanguages: ['en', 'fr', 'ja'],
+    resources: [
+      appTitleTranslations, // Overrides for core-components (app.title)
+    ],
   },
 });
 
