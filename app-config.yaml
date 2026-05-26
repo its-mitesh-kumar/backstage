@@ -59,6 +59,14 @@ app:
     - entity-card:org/ownership:
         config:
           ownedKinds: ['Component', 'API', 'System']
+    - catalog-column:catalog/name
+    - catalog-column:catalog/namespace
+    - catalog-column:catalog/owner
+    - catalog-column:catalog/type
+    - catalog-column:catalog/system
+    - catalog-column:catalog/lifecycle
+    - catalog-column:catalog/description
+    - catalog-column:catalog/tags
 
     # - apis.plugin.graphiql.browse.gitlab: true
     # - graphiql-endpoint:graphiql/gitlab: true
