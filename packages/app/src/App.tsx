@@ -53,6 +53,7 @@ import { appModuleNav } from './modules/appModuleNav';
 import { appModuleScaffolder } from './modules/appModuleScaffolder';
 import catalogPlugin from '@backstage/plugin-catalog/alpha';
 import InfoIcon from '@material-ui/icons/Info';
+import namespaceColumn from './catalog/customColumns';
 
 /**
  * TechDocs does support the new frontend system so this conversion is not
@@ -119,6 +120,11 @@ const customizedCatalog = catalogPlugin.withOverrides({
   ],
 });
 
+const customCatalogColumns = createFrontendModule({
+  pluginId: 'catalog',
+  extensions: [namespaceColumn],
+});
+
 const notFoundErrorPageModule = createFrontendModule({
   pluginId: 'app',
   extensions: [notFoundErrorPage],
@@ -133,6 +139,7 @@ const collectedLegacyPlugins = convertLegacyAppRoot(
 const app = createApp({
   features: [
     customizedCatalog,
+    customCatalogColumns,
     pagesPlugin,
     convertedTechdocsPlugin,
     userSettingsPlugin,
